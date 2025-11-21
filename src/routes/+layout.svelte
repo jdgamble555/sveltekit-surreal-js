@@ -20,5 +20,6 @@
 		{:else}
 			<a href="/login">Login</a>
 		{/if}
+		<a href="/dashboard">Dashboard</a>
 	</nav>
 </main>

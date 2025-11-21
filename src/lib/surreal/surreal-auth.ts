@@ -1,4 +1,4 @@
-import { Surreal, SurrealDbError } from "surrealdb";
+import { StringRecordId, Surreal, SurrealDbError } from "surrealdb";
 
 
 export async function surrealConnect({
@@ -155,3 +155,67 @@ export async function surrealRegister({
         };
     }
 };
+
+export async function surrealChangePassword({
+    db,
+    currentPassword,
+    newPassword,
+    userId
+}: {
+    db: Surreal,
+    currentPassword: string,
+    newPassword: string,
+    userId: string
+}) {
+
+    try {
+
+        const query = `
+            UPDATE $id
+            SET password = crypto::argon2::generate($new)
+            WHERE crypto::argon2::compare(password, $old)
+        `;
+
+        const [result] = await db.query<[{
+            id: string,
+            password: string,
+            username: string
+        }][]>(query, {
+            id: new StringRecordId(userId),
+            old: currentPassword,
+            new: newPassword
+        });
+
+        if (!result) {
+            return {
+                data: null,
+                error: new Error("Password change failed")
+            };
+        }
+        
+        return {
+            data: result[0],
+            error: null
+        };
+
+    } catch (error) {
+
+        if (error instanceof SurrealDbError) {
+            return {
+                data: null,
+                error
+            };
+        }
+
+        if (error instanceof Error) {
+            return {
+                error,
+                data: null
+            };
+        }
+        return {
+            error: new Error('Unknown query error'),
+            data: null
+        };
+    }
+}

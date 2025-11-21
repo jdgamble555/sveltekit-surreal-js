@@ -1,6 +1,7 @@
 import { getRequestEvent } from "$app/server";
 import { decodeJwt } from "./jwt";
 import {
+    surrealChangePassword,
     surrealConnect,
     surrealLogin,
     surrealRegister
@@ -175,6 +176,48 @@ export function surrealServer({
         };
     };
 
+    async function changePassword(oldPassword: string, newPassword: string) {
+
+        const userId = getUser();
+
+        if (!userId) {
+            return {
+                data: null,
+                error: new Error('Not authenticated')
+            };
+        }
+
+        const { data: db, error: dbError } = await connect();
+
+        if (dbError) {
+            return {
+                data: null,
+                error: dbError
+            };
+        }
+
+        const { data, error: changeError } = await surrealChangePassword({
+            db,
+            currentPassword: oldPassword,
+            newPassword,
+            userId
+        });
+
+
+        if (changeError) {
+            return {
+                data: null,
+                error: changeError
+            };
+        }
+
+        return {
+            data,
+            error: null
+        };
+
+    }
+
     function logout() {
 
         const { cookies } = getRequestEvent();
@@ -202,7 +245,8 @@ export function surrealServer({
         login,
         register,
         logout,
-        getUser
+        getUser,
+        changePassword
     };
 }
 
