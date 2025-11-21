@@ -5,9 +5,7 @@ import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ locals: { surreal } }) => {
 
-    const userId = surreal.getUser();
-
-    console.log(userId);
+    const userId = await surreal.getUserInfo();
 
     if (!userId) {
         redirect(303, '/login');

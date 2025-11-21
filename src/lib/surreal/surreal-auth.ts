@@ -192,7 +192,7 @@ export async function surrealChangePassword({
                 error: new Error("Password change failed")
             };
         }
-        
+
         return {
             data: result[0],
             error: null
@@ -219,3 +219,4 @@ export async function surrealChangePassword({
         };
     }
 }
+

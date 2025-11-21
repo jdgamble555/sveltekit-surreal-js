@@ -240,12 +240,30 @@ export function surrealServer({
         return decodeJwt(token).ID as string;
     }
 
+    async function getUserInfo() {
+
+        const { data: db, error: dbError } = await connect();
+
+        if (dbError) {
+            return null;
+        }
+
+        const info = await db.info();
+
+        if (!info?.id) {
+            return null;
+        }
+
+        return info.id.toString();
+    }
+
     return {
         connect,
         login,
         register,
         logout,
         getUser,
+        getUserInfo,
         changePassword
     };
 }
