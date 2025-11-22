@@ -15,7 +15,7 @@
 			type="text"
 			name="username"
 			placeholder="Username"
-			autocomplete="username"
+			autocomplete="off"
 		/>
 		<input
 			class="rounded-lg border p-3"

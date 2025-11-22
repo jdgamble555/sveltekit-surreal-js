@@ -12,7 +12,9 @@ export interface JwtPayload {
 export function decodeJwt(token: string) {
 	try {
 		const [, payloadB64] = token.split('.');
-		return JSON.parse(Buffer.from(payloadB64, 'base64url').toString()) as JwtPayload;
+		return JSON.parse(
+			Buffer.from(payloadB64, 'base64url').toString()
+		) as JwtPayload;
 	} catch {
 		return {};
 	}

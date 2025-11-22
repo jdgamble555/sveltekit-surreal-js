@@ -38,7 +38,10 @@ export const actions: Actions = {
 
         const { username, password } = result.output;
 
-        const { error: registerError } = await surreal.register(username, password);
+        const {
+            error: registerError
+        } = await surreal.register(username, password);
+        
         if (registerError) {
             error(500, registerError.message);
         }

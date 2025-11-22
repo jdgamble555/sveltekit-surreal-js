@@ -20,8 +20,11 @@ export const actions: Actions = {
 
         const { oldPassword, newPassword } = Object.fromEntries(formData);
 
-        if (typeof oldPassword !== 'string' || typeof newPassword !== 'string') {
-            error(500, 'Invalid form data');
+        if (typeof oldPassword !== 'string'
+            || typeof newPassword !== 'string'
+            || newPassword.length < 3) {
+
+            error(500, 'Invalid password data');
         }
 
         const {

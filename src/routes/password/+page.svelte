@@ -12,7 +12,7 @@
 	>
 		<input
 			class="rounded-lg border p-3"
-			type="text"
+			type="password"
 			name="oldPassword"
 			placeholder="Current Password"
 			autocomplete="off"

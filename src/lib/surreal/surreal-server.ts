@@ -1,4 +1,3 @@
-import { getRequestEvent } from "$app/server";
 import { decodeJwt } from "./jwt";
 import {
     surrealChangePassword,
@@ -43,9 +42,7 @@ export function surrealServer({
     credentials: {
         url: string,
         namespace: string,
-        database: string,
-        username: string,
-        password: string
+        database: string
     }
 }) {
 
@@ -135,8 +132,6 @@ export function surrealServer({
 
         logout();
 
-        const { cookies } = getRequestEvent();
-
         const { data: db, error: dbError } = await connect();
 
         if (dbError) {
@@ -164,7 +159,7 @@ export function surrealServer({
             };
         }
 
-        cookies.set(
+        setCookie(
             tokenName,
             token,
             TOKEN_COOKIE_OPTIONS
@@ -215,17 +210,18 @@ export function surrealServer({
             data,
             error: null
         };
-
     }
 
     function logout() {
 
-        const { cookies } = getRequestEvent();
-
         const token = getCookie(tokenName);
 
         if (token) {
-            cookies.delete(tokenName, TOKEN_COOKIE_OPTIONS);
+            // delete cookie equivalent
+            setCookie(tokenName, '', {
+                ...TOKEN_COOKIE_OPTIONS,
+                maxAge: 0            
+            });
         }
     };
 
@@ -267,6 +263,8 @@ export function surrealServer({
         changePassword
     };
 }
+
+
 
 
 
